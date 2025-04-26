@@ -1,12 +1,13 @@
-package controller;
+package edu.sliit.Teach4me.controller;
 
 import lombok.RequiredArgsConstructor;
-import model.Post;
+import edu.sliit.Teach4me.model.Post;
+import edu.sliit.Teach4me.dto.CreatePostRequest;
+import edu.sliit.Teach4me.dto.UpdatePostRequest;
+import edu.sliit.Teach4me.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import service.PostService;
-
 import java.util.List;
 
 @RestController
@@ -16,21 +17,19 @@ public class PostController {
 
     private final PostService postService;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<Post> createPost(
-            @RequestParam String userId,
-            @RequestParam String textStatus,
-            @RequestParam(required = false) List<MultipartFile> mediaFiles
+            @RequestBody CreatePostRequest request
     ) {
-        return ResponseEntity.ok(postService.createPost(userId, textStatus, mediaFiles));
+        return ResponseEntity.ok(postService.createPost(request.getUserId(), request.getTextStatus(), request.getMediaFiles()));
     }
 
     @PutMapping("/{postId}")
     public ResponseEntity<Post> updatePost(
             @PathVariable String postId,
-            @RequestParam String textStatus
+            @RequestBody UpdatePostRequest request
     ) {
-        return ResponseEntity.ok(postService.updatePost(postId, textStatus));
+        return ResponseEntity.ok(postService.updatePost(postId, request.getTextStatus()));
     }
 
     @DeleteMapping("/{postId}")

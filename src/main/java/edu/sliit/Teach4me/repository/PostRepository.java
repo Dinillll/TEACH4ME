@@ -1,6 +1,6 @@
-package repository;
+package edu.sliit.Teach4me.repository;
 
-import model.Post;
+import edu.sliit.Teach4me.model.Post;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 

@@ -1,12 +1,12 @@
-package service.serviceImpl;
+package edu.sliit.Teach4me.service.serviceImpl;
 
 
 import lombok.RequiredArgsConstructor;
-import model.Post;
+import edu.sliit.Teach4me.model.Post;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import repository.PostRepository;
-import service.PostService;
+import edu.sliit.Teach4me.repository.PostRepository;
+import edu.sliit.Teach4me.service.PostService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,22 +19,13 @@ public class PostServiceImpl implements PostService {
     private final PostRepository postRepository;
 
     @Override
-    public Post createPost(String userId, String textStatus, List<MultipartFile> mediaFiles) {
-        List<String> mediaUrls = new ArrayList<>();
-
-        if (mediaFiles != null && !mediaFiles.isEmpty()) {
-            if (mediaFiles.size() > 3) {
-                throw new RuntimeException("Only up to 3 media files allowed.");
-            }
-            for (MultipartFile file : mediaFiles) {
-                mediaUrls.add(file.getOriginalFilename()); // Placeholder for real URL
-            }
-        }
+    public Post createPost(String userId, String textStatus, List<String> mediaFiles) {
+        System.out.println(textStatus);
 
         Post post = Post.builder()
                 .userId(userId)
                 .textStatus(textStatus)
-                .mediaUrls(mediaUrls)
+                .mediaUrls(mediaFiles)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

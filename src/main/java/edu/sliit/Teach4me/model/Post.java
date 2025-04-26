@@ -1,4 +1,4 @@
-package model;
+package edu.sliit.Teach4me.model;
 
 
 import lombok.*;
@@ -16,13 +16,13 @@ import java.util.List;
 public class Post {
 
     @Id
-    private String id; // Mongo uses String ID
+    private String id;
 
     private String userId;
 
     private String textStatus;
 
-    private List<String> mediaUrls; // up to 3 images or 1 video
+    private List<String> mediaUrls;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
