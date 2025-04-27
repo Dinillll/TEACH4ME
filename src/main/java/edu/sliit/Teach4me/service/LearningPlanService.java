@@ -1,17 +1,19 @@
 package edu.sliit.Teach4me.service;
 
+import edu.sliit.Teach4me.config.ApiResponse;
 import edu.sliit.Teach4me.dto.LearningPlanUpdateAddDTO;
 import edu.sliit.Teach4me.dto.MilestoneRequest;
 import edu.sliit.Teach4me.model.LearningPlan;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface LearningPlanService {
-    LearningPlan createPlan(LearningPlan plan);
-    LearningPlan updateMilestoneStatus(String planId, int milestoneIndex, MilestoneRequest milestoneRequest);
+    ResponseEntity<ApiResponse<LearningPlan>> createPlan(LearningPlan plan);
+    ResponseEntity<ApiResponse<LearningPlan>> updateMilestoneStatus(String planId, int milestoneIndex, MilestoneRequest milestoneRequest);
     void updateProgress(LearningPlan plan);
-    List<LearningPlan> findByUserId(String userId);
-    void deletePlan(String planId);
-    LearningPlan updatePlan(String planId, LearningPlanUpdateAddDTO updateAddDTO);
-    LearningPlan deleteMilestone(String planId, int milestoneIndex);
+    ResponseEntity<ApiResponse<List<LearningPlan>>> findByUserId(String userId);
+    ResponseEntity<ApiResponse<List<Boolean>>> deletePlan(String planId);
+    ResponseEntity<ApiResponse<LearningPlan>> updatePlan(String planId, LearningPlanUpdateAddDTO updateAddDTO);
+    ResponseEntity<ApiResponse<LearningPlan>> deleteMilestone(String planId, int milestoneIndex);
 }

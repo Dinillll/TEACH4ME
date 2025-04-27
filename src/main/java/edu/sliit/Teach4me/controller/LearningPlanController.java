@@ -2,12 +2,14 @@ package edu.sliit.Teach4me.controller;
 
 
 
+import edu.sliit.Teach4me.config.ApiResponse;
 import edu.sliit.Teach4me.dto.LearningPlanUpdateAddDTO;
 import edu.sliit.Teach4me.dto.MilestoneRequest;
 import edu.sliit.Teach4me.model.LearningPlan;
 import edu.sliit.Teach4me.service.LearningPlanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,56 +20,59 @@ import java.util.List;
 @RequestMapping("/api/learning-plans")
 public class LearningPlanController {
 
-    private final LearningPlanService service;
+    private final LearningPlanService learningPlanService;
 
     @Autowired
     public LearningPlanController(LearningPlanService service) {
-        this.service = service;
+        this.learningPlanService = service;
     }
 
     @PostMapping("/save")
-    public ResponseEntity<LearningPlan> createPlan(@RequestBody LearningPlan plan) {
+    public ResponseEntity<ApiResponse<LearningPlan>> createPlan(@RequestBody LearningPlan plan) {
         log.info("Attempting to create a new learning plan: {}", plan.getTitle());
-        return ResponseEntity.ok(service.createPlan(plan));
+        return learningPlanService.createPlan(plan);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<LearningPlan>> getPlansByUser(@PathVariable String userId) {
+    public ResponseEntity<ApiResponse<List<LearningPlan>>> getPlansByUser(@PathVariable String userId) {
         log.info("Attempting to get learning plans: {}", userId);
-        return ResponseEntity.ok(service.findByUserId(userId));
+        return learningPlanService.findByUserId(userId);
     }
 
     @PutMapping("/{planId}/milestones/{milestoneIndex}")
-    public ResponseEntity<LearningPlan> updateMilestone(
+    public ResponseEntity<ApiResponse<LearningPlan>> updateMilestone(
             @PathVariable String planId,
             @PathVariable int milestoneIndex,
             @RequestBody MilestoneRequest milestoneRequest) {
         log.info("Attempting to update milestone status for plan: {} at index: {}", planId, milestoneIndex);
-        return ResponseEntity.ok(service.updateMilestoneStatus(planId, milestoneIndex, milestoneRequest));
+        return learningPlanService.updateMilestoneStatus(planId, milestoneIndex, milestoneRequest);
     }
 
 
     @DeleteMapping("/{planId}/milestones/{milestoneIndex}")
-    public ResponseEntity<Void> deleteMilestone(
+    public ResponseEntity<ApiResponse<LearningPlan>> deleteMilestone(
             @PathVariable String planId,
             @PathVariable int milestoneIndex) {
-        LearningPlan plan = service.deleteMilestone(planId, milestoneIndex);
         log.info("Attempting to delete milestone at index: {} for plan: {}", milestoneIndex, planId);
-        return ResponseEntity.noContent().build();
+        return learningPlanService.deleteMilestone(planId, milestoneIndex);
     }
 
     @PutMapping("/{planId}/update")
-    public ResponseEntity<LearningPlan> updatePlan(@PathVariable String planId, @RequestBody LearningPlanUpdateAddDTO updateAddDTO) {
-        LearningPlan plan = service.updatePlan(planId, updateAddDTO);
+    public ResponseEntity<ApiResponse<LearningPlan>> updatePlan(@PathVariable String planId, @RequestBody LearningPlanUpdateAddDTO updateAddDTO) {
         log.info("Attempting to update progress for learning plan: {}", planId);
-        return ResponseEntity.ok(plan);
+        return learningPlanService.updatePlan(planId, updateAddDTO);
     }
 
     @DeleteMapping("/{planId}")
-    public ResponseEntity<Void> deletePlan(@PathVariable String planId) {
-        service.deletePlan(planId);
-        log.info("Attempting to delete learning plan: {}", planId);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ApiResponse<Boolean>> deletePlan(@PathVariable String planId) {
+        try {
+            log.info("Attempting to delete learning plan: {}", planId);
+            learningPlanService.deletePlan(planId);
+           return ApiResponse.successResponse("Plan deleted successfully",true);
+        } catch (Exception e) {
+            log.error("Error deleting learning plan: {}", e.getMessage());
+            return ApiResponse.errorResponse("Failed to delete plan", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
