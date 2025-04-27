@@ -46,6 +46,16 @@ public class LearningPlanController {
         return ResponseEntity.ok(service.updateMilestoneStatus(planId, milestoneIndex, milestoneRequest));
     }
 
+
+    @DeleteMapping("/{planId}/milestones/{milestoneIndex}")
+    public ResponseEntity<Void> deleteMilestone(
+            @PathVariable String planId,
+            @PathVariable int milestoneIndex) {
+        LearningPlan plan = service.deleteMilestone(planId, milestoneIndex);
+        log.info("Attempting to delete milestone at index: {} for plan: {}", milestoneIndex, planId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PutMapping("/{planId}/update")
     public ResponseEntity<LearningPlan> updatePlan(@PathVariable String planId, @RequestBody LearningPlanUpdateAddDTO updateAddDTO) {
         LearningPlan plan = service.updatePlan(planId, updateAddDTO);

@@ -144,4 +144,18 @@ public class LearningPlanServiceImpl implements LearningPlanService {
         }
         return repository.save(plan);
     }
+
+    @Override
+    public LearningPlan deleteMilestone(String planId, int milestoneIndex) {
+        LearningPlan plan = repository.findById(planId)
+                .orElseThrow(() -> new NoSuchElementException("Plan not found"));
+
+        if (milestoneIndex >= 0 && milestoneIndex < plan.getMilestones().size()) {
+            plan.getMilestones().remove(milestoneIndex);
+            updateProgress(plan); // Recalculate progress
+            return repository.save(plan);
+        } else {
+            throw new IllegalArgumentException("Invalid milestone index");
+        }
+    }
 }

@@ -13,4 +13,5 @@ public interface LearningPlanService {
     List<LearningPlan> findByUserId(String userId);
     void deletePlan(String planId);
     LearningPlan updatePlan(String planId, LearningPlanUpdateAddDTO updateAddDTO);
+    LearningPlan deleteMilestone(String planId, int milestoneIndex);
 }
