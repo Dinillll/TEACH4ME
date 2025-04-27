@@ -1,5 +1,6 @@
 package edu.sliit.Teach4me.service;
 
+import edu.sliit.Teach4me.dto.LearningPlanUpdateAddDTO;
 import edu.sliit.Teach4me.dto.MilestoneRequest;
 import edu.sliit.Teach4me.model.LearningPlan;
 
@@ -11,4 +12,5 @@ public interface LearningPlanService {
     void updateProgress(LearningPlan plan);
     List<LearningPlan> findByUserId(String userId);
     void deletePlan(String planId);
+    LearningPlan updatePlan(String planId, LearningPlanUpdateAddDTO updateAddDTO);
 }

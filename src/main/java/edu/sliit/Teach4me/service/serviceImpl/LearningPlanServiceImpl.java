@@ -52,6 +52,7 @@
 
 package edu.sliit.Teach4me.service.serviceImpl;
 
+import edu.sliit.Teach4me.dto.LearningPlanUpdateAddDTO;
 import edu.sliit.Teach4me.dto.MilestoneRequest;
 import edu.sliit.Teach4me.model.LearningPlan;
 import edu.sliit.Teach4me.repository.LearningPlanRepository;
@@ -122,5 +123,25 @@ public class LearningPlanServiceImpl implements LearningPlanService {
     @Override
     public void deletePlan(String planId) {
         repository.deleteById(planId);
+    }
+
+    @Override
+    public LearningPlan updatePlan( String planId, LearningPlanUpdateAddDTO updateAddDTO) {
+        LearningPlan plan = repository.findById(planId)
+                .orElseThrow(() -> new NoSuchElementException("Plan not found"));
+
+        if (updateAddDTO.getTitle() != null) {
+            plan.setTitle(updateAddDTO.getTitle());
+        }
+        if (updateAddDTO.getDescription() != null) {
+            plan.setDescription(updateAddDTO.getDescription());
+        }
+        if (updateAddDTO.getStartDate() != null) {
+            plan.setStartDate(updateAddDTO.getStartDate());
+        }
+        if (updateAddDTO.getEndDate() != null) {
+            plan.setEndDate(updateAddDTO.getEndDate());
+        }
+        return repository.save(plan);
     }
 }

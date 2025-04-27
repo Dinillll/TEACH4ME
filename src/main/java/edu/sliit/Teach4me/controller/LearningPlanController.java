@@ -2,6 +2,7 @@ package edu.sliit.Teach4me.controller;
 
 
 
+import edu.sliit.Teach4me.dto.LearningPlanUpdateAddDTO;
 import edu.sliit.Teach4me.dto.MilestoneRequest;
 import edu.sliit.Teach4me.model.LearningPlan;
 import edu.sliit.Teach4me.service.LearningPlanService;
@@ -43,6 +44,13 @@ public class LearningPlanController {
             @RequestBody MilestoneRequest milestoneRequest) {
         log.info("Attempting to update milestone status for plan: {} at index: {}", planId, milestoneIndex);
         return ResponseEntity.ok(service.updateMilestoneStatus(planId, milestoneIndex, milestoneRequest));
+    }
+
+    @PutMapping("/{planId}/update")
+    public ResponseEntity<LearningPlan> updatePlan(@PathVariable String planId, @RequestBody LearningPlanUpdateAddDTO updateAddDTO) {
+        LearningPlan plan = service.updatePlan(planId, updateAddDTO);
+        log.info("Attempting to update progress for learning plan: {}", planId);
+        return ResponseEntity.ok(plan);
     }
 
     @DeleteMapping("/{planId}")
