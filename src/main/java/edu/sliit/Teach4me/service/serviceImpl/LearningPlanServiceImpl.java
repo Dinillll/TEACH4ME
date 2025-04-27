@@ -52,15 +52,18 @@
 
 package edu.sliit.Teach4me.service.serviceImpl;
 
+import edu.sliit.Teach4me.dto.MilestoneRequest;
 import edu.sliit.Teach4me.model.LearningPlan;
 import edu.sliit.Teach4me.repository.LearningPlanRepository;
 import edu.sliit.Teach4me.service.LearningPlanService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 public class LearningPlanServiceImpl implements LearningPlanService {
 
@@ -78,11 +81,28 @@ public class LearningPlanServiceImpl implements LearningPlanService {
     }
 
     @Override
-    public LearningPlan updateMilestoneStatus(String planId, int milestoneIndex, String status) {
+    public LearningPlan updateMilestoneStatus(String planId, int milestoneIndex, MilestoneRequest milestoneRequest) {
         LearningPlan plan = repository.findById(planId)
                 .orElseThrow(() -> new NoSuchElementException("Plan not found"));
-        plan.getMilestones().get(milestoneIndex).setStatus(status);
-        updateProgress(plan);
+
+
+        if(milestoneRequest.getStatus() != null){
+            plan.getMilestones().get(milestoneIndex).setStatus(milestoneRequest.getStatus());
+        }
+
+        if(milestoneRequest.getDescription() != null){
+            plan.getMilestones().get(milestoneIndex).setDescription(milestoneRequest.getDescription());
+        }
+
+        if(milestoneRequest.getTitle() != null){
+            plan.getMilestones().get(milestoneIndex).setTitle(milestoneRequest.getTitle());
+        }
+
+        if(milestoneRequest.getDueDate() != null){
+            plan.getMilestones().get(milestoneIndex).setDueDate(milestoneRequest.getDueDate());
+        }
+
+        log.info("Updated milestone status for plan: {} at index: {} with status: {}", planId, milestoneIndex, milestoneRequest.getStatus());
         return repository.save(plan);
     }
 

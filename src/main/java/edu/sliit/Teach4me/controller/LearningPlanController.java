@@ -2,14 +2,17 @@ package edu.sliit.Teach4me.controller;
 
 
 
+import edu.sliit.Teach4me.dto.MilestoneRequest;
 import edu.sliit.Teach4me.model.LearningPlan;
 import edu.sliit.Teach4me.service.LearningPlanService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/learning-plans")
 public class LearningPlanController {
@@ -23,11 +26,13 @@ public class LearningPlanController {
 
     @PostMapping("/save")
     public ResponseEntity<LearningPlan> createPlan(@RequestBody LearningPlan plan) {
+        log.info("Attempting to create a new learning plan: {}", plan.getTitle());
         return ResponseEntity.ok(service.createPlan(plan));
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<LearningPlan>> getPlansByUser(@PathVariable String userId) {
+        log.info("Attempting to get learning plans: {}", userId);
         return ResponseEntity.ok(service.findByUserId(userId));
     }
 
@@ -35,13 +40,16 @@ public class LearningPlanController {
     public ResponseEntity<LearningPlan> updateMilestone(
             @PathVariable String planId,
             @PathVariable int milestoneIndex,
-            @RequestParam String status) {
-        return ResponseEntity.ok(service.updateMilestoneStatus(planId, milestoneIndex, status));
+            @RequestBody MilestoneRequest milestoneRequest) {
+        log.info("Attempting to update milestone status for plan: {} at index: {}", planId, milestoneIndex);
+        return ResponseEntity.ok(service.updateMilestoneStatus(planId, milestoneIndex, milestoneRequest));
     }
 
     @DeleteMapping("/{planId}")
     public ResponseEntity<Void> deletePlan(@PathVariable String planId) {
         service.deletePlan(planId);
+        log.info("Attempting to delete learning plan: {}", planId);
         return ResponseEntity.noContent().build();
     }
+
 }
